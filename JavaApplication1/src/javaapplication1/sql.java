@@ -3,19 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package compiladorr;
+package javaapplication1;
+import java.sql.*;
+
 
 /**
  *
  * @author Leonardo
  */
-public class Compiladorr {
-
-    /**
-     * @param args the command line arguments
-     */
+public class sql {
     public static void main(String[] args) {
-        // TODO code application logic here
+        
     }
     
 }
