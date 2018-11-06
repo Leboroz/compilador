@@ -4,10 +4,21 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.util.Scanner;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTree;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -24,10 +35,11 @@ public class NewJFrame extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
- 
+ DefaultTreeModel model;
     public NewJFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
+        model= (DefaultTreeModel) jTree1.getModel();
     }
  
     /**
@@ -71,17 +83,22 @@ public class NewJFrame extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jComboBox1 = new javax.swing.JComboBox<>();
         fontcombo = new javax.swing.JComboBox<>();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         status = new javax.swing.JPanel();
         jButton14 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        panelanalisis = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        Lexico = new javax.swing.JPanel();
+        jButton10 = new javax.swing.JButton();
+        sintaxico = new javax.swing.JPanel();
+        jButton11 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
         errores = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -96,6 +113,11 @@ public class NewJFrame extends javax.swing.JFrame {
         addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentAdded(java.awt.event.ContainerEvent evt) {
                 formComponentAdded(evt);
+            }
+        });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
             }
         });
 
@@ -173,7 +195,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(545, Short.MAX_VALUE))
         );
         MenuLayout.setVerticalGroup(
             MenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,6 +230,9 @@ public class NewJFrame extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel1MouseEntered(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel1MouseExited(evt);
+            }
         });
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -220,11 +245,25 @@ public class NewJFrame extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel2MouseEntered(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel2MouseExited(evt);
+            }
         });
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Salir");
         jLabel3.setMaximumSize(new java.awt.Dimension(39, 15));
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel3MouseExited(evt);
+            }
+        });
 
         jSeparator1.setBackground(new java.awt.Color(51, 0, 51));
 
@@ -311,10 +350,32 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Léxico");
         jLabel7.setMaximumSize(new java.awt.Dimension(39, 15));
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel7MouseExited(evt);
+            }
+        });
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Sintactico");
         jLabel8.setMaximumSize(new java.awt.Dimension(39, 15));
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel8MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel8MouseExited(evt);
+            }
+        });
 
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Sematico");
@@ -389,14 +450,17 @@ public class NewJFrame extends javax.swing.JFrame {
         });
         toolbar.setLayout(null);
 
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pegar.png"))); // NOI18N
         jButton5.setToolTipText("Pegar");
         toolbar.add(jButton5);
         jButton5.setBounds(10, 3, 44, 61);
 
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cortar.png"))); // NOI18N
         jButton6.setToolTipText("Cortar");
         toolbar.add(jButton6);
         jButton6.setBounds(70, 40, 30, 28);
 
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/copiar.png"))); // NOI18N
         jButton7.setToolTipText("Copiar");
         toolbar.add(jButton7);
         jButton7.setBounds(70, 10, 30, 30);
@@ -408,7 +472,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72", " " }));
         jComboBox1.setSelectedIndex(4);
         toolbar.add(jComboBox1);
-        jComboBox1.setBounds(250, 10, 50, 22);
+        jComboBox1.setBounds(250, 20, 50, 22);
 
         fontcombo.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
@@ -430,45 +494,23 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
         toolbar.add(fontcombo);
-        fontcombo.setBounds(120, 10, 120, 20);
-
-        jButton10.setToolTipText("Texto en negrita");
-        jButton10.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton10MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton10MouseEntered(evt);
-            }
-        });
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
-            }
-        });
-        toolbar.add(jButton10);
-        jButton10.setBounds(120, 40, 25, 25);
-
-        jButton11.setToolTipText("Subrayado");
-        toolbar.add(jButton11);
-        jButton11.setBounds(180, 40, 25, 25);
-
-        jButton12.setToolTipText("Cursiva");
-        toolbar.add(jButton12);
-        jButton12.setBounds(150, 40, 25, 25);
+        fontcombo.setBounds(120, 20, 120, 20);
 
         jSeparator3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
         toolbar.add(jSeparator3);
         jSeparator3.setBounds(310, 2, 5, 60);
 
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/centrar.png"))); // NOI18N
         jButton8.setToolTipText("Centrar");
         toolbar.add(jButton8);
         jButton8.setBounds(380, 10, 50, 50);
 
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/derecha.png"))); // NOI18N
         jButton9.setToolTipText("Alinear a la derecha");
         toolbar.add(jButton9);
         jButton9.setBounds(440, 10, 50, 50);
 
+        jButton13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/izquierda.png"))); // NOI18N
         jButton13.setToolTipText("Alinear a la izquierda");
         toolbar.add(jButton13);
         jButton13.setBounds(320, 10, 50, 50);
@@ -498,33 +540,119 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(46, 44, 109));
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panelanalisis.setBackground(new java.awt.Color(46, 44, 109));
+        panelanalisis.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panelanalisis.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                panelanalisisAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 164, Short.MAX_VALUE)
+        jPanel2.setLayout(new java.awt.CardLayout());
+
+        jButton10.setText("Analisis");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout LexicoLayout = new javax.swing.GroupLayout(Lexico);
+        Lexico.setLayout(LexicoLayout);
+        LexicoLayout.setHorizontalGroup(
+            LexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(LexicoLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jButton10)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        LexicoLayout.setVerticalGroup(
+            LexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LexicoLayout.createSequentialGroup()
+                .addContainerGap(352, Short.MAX_VALUE)
+                .addComponent(jButton10)
+                .addGap(26, 26, 26))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        jPanel2.add(Lexico, "card2");
+
+        jButton11.setText("Analisis");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Analisis sintactico");
+        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane3.setViewportView(jTree1);
+
+        javax.swing.GroupLayout sintaxicoLayout = new javax.swing.GroupLayout(sintaxico);
+        sintaxico.setLayout(sintaxicoLayout);
+        sintaxicoLayout.setHorizontalGroup(
+            sintaxicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sintaxicoLayout.createSequentialGroup()
+                .addGroup(sintaxicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(sintaxicoLayout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jButton11))
+                    .addGroup(sintaxicoLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        sintaxicoLayout.setVerticalGroup(
+            sintaxicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sintaxicoLayout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton11)
+                .addGap(26, 26, 26))
+        );
+
+        jPanel2.add(sintaxico, "card3");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 187, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 401, Short.MAX_VALUE)
+        );
+
+        jPanel2.add(jPanel6, "card4");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel10.setText("LEXICO");
+
+        javax.swing.GroupLayout panelanalisisLayout = new javax.swing.GroupLayout(panelanalisis);
+        panelanalisis.setLayout(panelanalisisLayout);
+        panelanalisisLayout.setHorizontalGroup(
+            panelanalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelanalisisLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelanalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelanalisisLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(67, 67, 67)
+        panelanalisisLayout.setVerticalGroup(
+            panelanalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelanalisisLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addGap(42, 42, 42)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -578,10 +706,10 @@ public class NewJFrame extends javax.swing.JFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
-                                            .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jScrollPane1))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(panelanalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(1, 1, 1)
                                         .addComponent(toolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -609,15 +737,13 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(errores, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(errores, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelanalisis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -803,18 +929,6 @@ abrirpanel(panel1);
         abrirpanel(panel1); 
     }//GEN-LAST:event_jLabel2MouseEntered
 
-    private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
-        
-    }//GEN-LAST:event_jButton10MouseClicked
-
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
-
-    private void jButton10MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseEntered
-        
-    }//GEN-LAST:event_jButton10MouseEntered
-
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
        if(errores.isVisible()){
         errores.setVisible(false);
@@ -823,6 +937,224 @@ abrirpanel(panel1);
        }
       
     }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+jLabel10.setText("LEXICO");
+     panelanalisis.setVisible(true);
+       
+    }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void jLabel7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseEntered
+   abrirpanel(panel3);
+    }//GEN-LAST:event_jLabel7MouseEntered
+
+    private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
+        cerrarpanel(panel3);
+    }//GEN-LAST:event_jLabel7MouseExited
+
+    private void panelanalisisAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_panelanalisisAncestorAdded
+     sql sql = new sql();
+        String comparador = texto.getText();
+        
+     
+    }//GEN-LAST:event_panelanalisisAncestorAdded
+
+    private void jLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseExited
+        cerrarpanel(panel1);
+    }//GEN-LAST:event_jLabel1MouseExited
+
+    private void jLabel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseExited
+        cerrarpanel(panel1);
+    }//GEN-LAST:event_jLabel2MouseExited
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+System.exit(0);
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
+     abrirpanel(panel1);
+    }//GEN-LAST:event_jLabel3MouseEntered
+
+    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
+        cerrarpanel(panel1);
+    }//GEN-LAST:event_jLabel3MouseExited
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        
+        HashMap <String,Integer> r = new HashMap<>();
+        HashMap <String,Integer> op = new HashMap<>();
+        HashMap <String,Integer> id = new HashMap<>();
+        HashMap <String,Integer> deli = new HashMap<>();
+        HashMap <String,Integer> num = new HashMap<>();
+        HashMap <String,Integer> coment = new HashMap<>();
+        HashMap <String,Integer> vari = new HashMap<>();
+        LinkedList <String> texto = new LinkedList<>();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        if(root.getChildCount()>0){
+            root.removeAllChildren();
+        }
+        r.put("INICIO", 0);
+        r.put("FIN", 0);
+        r.put("CADENA", 0);
+        r.put("NUM", 0);
+        r.put("BOOL", 0);
+        r.put("ENTRADA", 0);
+        r.put("IMPRIMIR", 0);
+        r.put("CUANDO", 0);
+        r.put("ESO", 0);
+        r.put("ES", 0);
+        r.put("PARA", 0);
+        r.put("PASO", 0);
+        r.put("A", 0);
+        r.put("PARAR", 0);
+        r.put("SCUANDO", 0);
+        r.put("COMPLETO", 0);
+        
+        op.put("/", 0);
+        op.put("*", 0);
+        op.put("+", 0);
+        op.put("-", 0);
+        op.put("=", 0);
+        op.put("^", 0);
+        op.put("<", 0);
+        op.put(">", 0);
+        op.put("||", 0);
+        op.put("&&", 0);
+        
+         deli.put("#", 0);
+        deli.put(";", 0);
+        deli.put("{", 0);
+        deli.put("}", 0);
+        deli.put(")", 0);
+        deli.put(",", 0);
+        deli.put("(",0);
+        
+        DefaultMutableTreeNode pr = new  DefaultMutableTreeNode("Palabras reservadas");
+        DefaultMutableTreeNode ps = new  DefaultMutableTreeNode("Palabras simples");
+        DefaultMutableTreeNode pc = new  DefaultMutableTreeNode("Palabras compuestas");
+        DefaultMutableTreeNode var = new  DefaultMutableTreeNode("Variables");
+        DefaultMutableTreeNode com = new  DefaultMutableTreeNode("Comentarios");
+        
+        
+       
+       StringTokenizer st = new StringTokenizer(this.texto.getText(),"{}();,\"=+-*/><||&&# \n\t",true);
+       String token, text = "";
+       while (st.hasMoreTokens()){
+            token = st.nextToken();
+            if(!" ".equals(token) && !"\n".equals(token) && !"\t".equals(token)){
+                
+                if (r.containsKey(token)) {
+                    r.put(token, r.get(token)+1);            
+                    
+                }else {
+                    
+                    if (op.containsKey(token)) {
+                        op.put(token, op.get(token)+1);            
+                    }else {
+                        if (deli.containsKey(token)){
+                            deli.put(token, deli.get(token)+1);
+                            if("#".equals(token)){
+                                token = st.nextToken();
+                                while (st.hasMoreTokens() && !"#".equals(token)){
+                                    text += token;
+                                    token = st.nextToken();
+                                }
+                                texto.add(text);
+                                coment.put(token,coment.get(token) +1);
+                                text = "";
+                            }
+                        }else {
+                            if (id.containsKey(token)) {
+                                id.put(token, id.get(token)+1); 
+                            }else {
+                                if(token.matches("([0-9]*)|([0-9]*.[0-9]+)")) {
+                                    if (num.containsKey(token)) {
+                                        num.put(token, num.get(token)+1);
+                                    }else num.put(token, 1); 
+                                }
+                                else id.put(token, 1); 
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+       if(root.getChildCount()==0){
+        root.add(pr);
+        root.add(var);
+       root.add(com); }
+          Iterator<String> itr = r.keySet().iterator();
+        while(itr.hasNext()){
+            token = itr.next();
+            if(r.get(token) > 0){
+                pr.add(new  DefaultMutableTreeNode(token));}
+        } 
+       
+       
+        itr = vari.keySet().iterator();
+        while(itr.hasNext()){
+            token = itr.next();
+            if(vari.get(token) > 0) var.add(new  DefaultMutableTreeNode(token));
+        }
+       /* itr = deli.keySet().iterator();
+        while(itr.hasNext()){
+            token = itr.next();
+            if(deli.get(token) > 0) model.addRow(new Object[]{token, deli.get(token),"Delimitador"});
+        } */
+        /*itr = id.keySet().iterator();
+        while(itr.hasNext()){
+            token = itr.next();
+            if(id.get(token) > 0) model.addRow(new Object[]{token, id.get(token),"comentatio"});
+        } */
+         
+         
+        itr = coment.keySet().iterator();
+        while(itr.hasNext()){
+            token = itr.next();
+            if(coment.get(token) > 0){com.add(new DefaultMutableTreeNode(token));}
+            
+        } 
+       
+       /* itr = num.keySet().iterator();
+        while(itr.hasNext()){
+            token = itr.next();
+            if(num.get(token) > 0) {
+                if(token.matches("[0-9]+"))model.addRow(new Object[]{token, num.get(token),"Número"});
+                if(token.matches("[0-9]+.[0-9]+"))model.addRow(new Object[]{token, num.get(token),"Número Decimal"});
+            }
+        }
+        itr = texto.iterator();
+        while(itr.hasNext()){
+            model.addRow(new Object[]{itr.next(), "1","Texto"});
+            
+        }
+        tabla.setModel(model);*/
+       model.reload();
+       JOptionPane.showMessageDialog(null,"listo","Advertencia",JOptionPane.WARNING_MESSAGE);
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jLabel8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseEntered
+       abrirpanel(panel3);
+    }//GEN-LAST:event_jLabel8MouseEntered
+
+    private void jLabel8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseExited
+        cerrarpanel(panel3);
+    }//GEN-LAST:event_jLabel8MouseExited
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+       jLabel10.setText("SINTACTICO");
+       jPanel2.removeAll();
+       jPanel2.add(sintaxico);
+    }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+
+    }//GEN-LAST:event_formComponentShown
 private void abrirpanel(javax.swing.JPanel panel){
     panel.setSize(110,150);
 }
@@ -836,6 +1168,8 @@ private void cerrarpanel(javax.swing.JPanel panel){
      */
    public static void main(String args[]) {
      
+    // sql sql=new sql();
+     //sql.obtenerConeccion();
      
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -876,6 +1210,7 @@ private void cerrarpanel(javax.swing.JPanel panel){
  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Lexico;
     private javax.swing.JPanel Menu;
     private javax.swing.JPanel errores;
     private javax.swing.JFileChooser file;
@@ -883,7 +1218,6 @@ private void cerrarpanel(javax.swing.JPanel panel){
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
@@ -896,6 +1230,7 @@ private void cerrarpanel(javax.swing.JPanel panel){
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
@@ -906,19 +1241,23 @@ private void cerrarpanel(javax.swing.JPanel panel){
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTree jTree1;
     private javax.swing.JPanel panel1;
     private javax.swing.JPanel panel2;
     private javax.swing.JPanel panel3;
     private javax.swing.JPanel panel4;
+    private javax.swing.JPanel panelanalisis;
+    private javax.swing.JPanel sintaxico;
     private javax.swing.JPanel status;
     private javax.swing.JTextArea texto;
     private javax.swing.JPanel toolbar;
