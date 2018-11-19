@@ -2,6 +2,11 @@ package javaapplication1;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import static java.awt.SystemColor.text;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.util.Scanner;
 import java.io.*;
 import java.util.HashMap;
@@ -10,6 +15,8 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.DataFormat;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,7 +45,15 @@ public class NewJFrame extends javax.swing.JFrame {
  DefaultTreeModel model;
     public NewJFrame() {
         initComponents();
+        String fonts[] = 
+      GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+    for ( int i = 0; i < fonts.length; i++ )
+    {
+      fontcombo.addItem(fonts[i]);
+    }
+    fontcombo.setSelectedIndex(8);
         this.setLocationRelativeTo(null);
+        panelanalisis.setVisible(false);
         model= (DefaultTreeModel) jTree1.getModel();
     }
  
@@ -97,11 +112,14 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
+        jButton12 = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        codigo = new javax.swing.JTextArea();
         jPanel6 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         errores = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        Error = new javax.swing.JTextArea();
 
         file.setAcceptAllFileFilterUsed(false);
         file.setBackground(new java.awt.Color(44, 46, 109));
@@ -195,7 +213,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addContainerGap(545, Short.MAX_VALUE))
+                .addContainerGap(577, Short.MAX_VALUE))
         );
         MenuLayout.setVerticalGroup(
             MenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,16 +470,40 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pegar.png"))); // NOI18N
         jButton5.setToolTipText("Pegar");
+        jButton5.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+                jButton5AncestorRemoved(evt);
+            }
+        });
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
         toolbar.add(jButton5);
         jButton5.setBounds(10, 3, 44, 61);
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cortar.png"))); // NOI18N
         jButton6.setToolTipText("Cortar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         toolbar.add(jButton6);
         jButton6.setBounds(70, 40, 30, 28);
 
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/copiar.png"))); // NOI18N
         jButton7.setToolTipText("Copiar");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         toolbar.add(jButton7);
         jButton7.setBounds(70, 10, 30, 30);
 
@@ -502,23 +544,37 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/centrar.png"))); // NOI18N
         jButton8.setToolTipText("Centrar");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
         toolbar.add(jButton8);
         jButton8.setBounds(380, 10, 50, 50);
 
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/derecha.png"))); // NOI18N
         jButton9.setToolTipText("Alinear a la derecha");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
         toolbar.add(jButton9);
         jButton9.setBounds(440, 10, 50, 50);
 
         jButton13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/izquierda.png"))); // NOI18N
         jButton13.setToolTipText("Alinear a la izquierda");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
         toolbar.add(jButton13);
         jButton13.setBounds(320, 10, 50, 50);
 
         status.setBackground(new java.awt.Color(46, 44, 109));
         status.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jButton14.setText("jButton14");
         jButton14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton14ActionPerformed(evt);
@@ -536,7 +592,7 @@ public class NewJFrame extends javax.swing.JFrame {
         statusLayout.setVerticalGroup(
             statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusLayout.createSequentialGroup()
-                .addComponent(jButton14)
+                .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
@@ -568,12 +624,12 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(LexicoLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(jButton10)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
         LexicoLayout.setVerticalGroup(
             LexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LexicoLayout.createSequentialGroup()
-                .addContainerGap(352, Short.MAX_VALUE)
+                .addContainerGap(389, Short.MAX_VALUE)
                 .addComponent(jButton10)
                 .addGap(26, 26, 26))
         );
@@ -591,6 +647,17 @@ public class NewJFrame extends javax.swing.JFrame {
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane3.setViewportView(jTree1);
 
+        jButton12.setText("Errores");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
+        codigo.setColumns(20);
+        codigo.setRows(5);
+        jScrollPane4.setViewportView(codigo);
+
         javax.swing.GroupLayout sintaxicoLayout = new javax.swing.GroupLayout(sintaxico);
         sintaxico.setLayout(sintaxicoLayout);
         sintaxicoLayout.setHorizontalGroup(
@@ -598,21 +665,27 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(sintaxicoLayout.createSequentialGroup()
                 .addGroup(sintaxicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(sintaxicoLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton11))
-                    .addGroup(sintaxicoLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                        .addGap(54, 54, 54)
+                        .addGroup(sintaxicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                            .addComponent(jButton11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
+                .addContainerGap())
         );
         sintaxicoLayout.setVerticalGroup(
             sintaxicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sintaxicoLayout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(23, 23, 23)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton11)
-                .addGap(26, 26, 26))
+                .addGap(6, 6, 6))
         );
 
         jPanel2.add(sintaxico, "card3");
@@ -621,18 +694,17 @@ public class NewJFrame extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 187, Short.MAX_VALUE)
+            .addGap(0, 291, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 401, Short.MAX_VALUE)
+            .addGap(0, 438, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel6, "card4");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel10.setText("LEXICO");
 
         javax.swing.GroupLayout panelanalisisLayout = new javax.swing.GroupLayout(panelanalisis);
         panelanalisis.setLayout(panelanalisisLayout);
@@ -641,7 +713,7 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(panelanalisisLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelanalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                     .addGroup(panelanalisisLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -659,9 +731,9 @@ public class NewJFrame extends javax.swing.JFrame {
 
         errores.setBackground(new java.awt.Color(46, 44, 109));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        Error.setColumns(20);
+        Error.setRows(5);
+        jScrollPane2.setViewportView(Error);
 
         javax.swing.GroupLayout erroresLayout = new javax.swing.GroupLayout(errores);
         errores.setLayout(erroresLayout);
@@ -684,38 +756,37 @@ public class NewJFrame extends javax.swing.JFrame {
             .addComponent(Menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
+                .addComponent(status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(220, 220, 220)
+                                .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(300, 300, 300)
+                                .addComponent(panel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(130, 130, 130)
+                                .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(220, 220, 220)
-                                        .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(300, 300, 300)
-                                        .addComponent(panel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(130, 130, 130)
-                                        .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(40, 40, 40)
-                                        .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jScrollPane1))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(panelanalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(1, 1, 1)
-                                        .addComponent(toolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGap(4, 4, 4)))
-                        .addContainerGap())
-                    .addComponent(status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(jScrollPane1)
+                                    .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelanalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(toolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(4, 4, 4)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -846,13 +917,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_fontcomboMouseClicked
 
     private void fontcomboAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_fontcomboAncestorAdded
-      String fonts[] = 
-      GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-    for ( int i = 0; i < fonts.length; i++ )
-    {
-      fontcombo.addItem(fonts[i]);
-    }
-    fontcombo.setSelectedIndex(26);
+      
    // ClorArrowUI combo = new ColorArrowUI();
      // fontcombo.setUI(combo.createUI(fontcombo));
     
@@ -993,6 +1058,9 @@ System.exit(0);
         HashMap <String,Integer> coment = new HashMap<>();
         HashMap <String,Integer> vari = new HashMap<>();
         LinkedList <String> texto = new LinkedList<>();
+        LinkedList <String> math = new LinkedList<>();
+        LinkedList <String> coments = new LinkedList<>();
+        
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
         if(root.getChildCount()>0){
             root.removeAllChildren();
@@ -1013,6 +1081,8 @@ System.exit(0);
         r.put("PARAR", 0);
         r.put("SCUANDO", 0);
         r.put("COMPLETO", 0);
+        r.put("MATH",0);
+        
         
         op.put("/", 0);
         op.put("*", 0);
@@ -1032,30 +1102,45 @@ System.exit(0);
         deli.put(")", 0);
         deli.put(",", 0);
         deli.put("(",0);
+        deli.put("'",0);
         
         DefaultMutableTreeNode pr = new  DefaultMutableTreeNode("Palabras reservadas");
         DefaultMutableTreeNode ps = new  DefaultMutableTreeNode("Palabras simples");
         DefaultMutableTreeNode pc = new  DefaultMutableTreeNode("Palabras compuestas");
         DefaultMutableTreeNode var = new  DefaultMutableTreeNode("Variables");
-        DefaultMutableTreeNode com = new  DefaultMutableTreeNode("Comentarios");
+        DefaultMutableTreeNode com = new  DefaultMutableTreeNode("cadenas");
+        DefaultMutableTreeNode mat = new  DefaultMutableTreeNode("Exp.Matematicas");
+        DefaultMutableTreeNode c = new  DefaultMutableTreeNode("comentarios");
         
         
        
        StringTokenizer st = new StringTokenizer(this.texto.getText(),"{}();,\"=+-*/><||&&# \n\t",true);
-       String token, text = "";
+       String token="", text = "",title="";
+        boolean exit = false;
+       String lol="";
+       while(st.hasMoreTokens()&&exit==false){
+             if(" ".equals(token)){
+                
+                exit=true;
+                }else{
+                  token = st.nextToken();
+                lol+=token;
+            }
+       
+         }
+       token="";
+       st = new StringTokenizer(this.texto.getText(),"{}();,\"=+-*/><||&&# \n\t'",true);
        while (st.hasMoreTokens()){
             token = st.nextToken();
             if(!" ".equals(token) && !"\n".equals(token) && !"\t".equals(token)){
                 
-                if (r.containsKey(token)) {
-                    r.put(token, r.get(token)+1);            
-                    
-                }else {
-                    
+                 if (r.containsKey(token)) {
+                    r.put(token, r.get(token)+1);    
+                    }else {
                     if (op.containsKey(token)) {
                         op.put(token, op.get(token)+1);            
                     }else {
-                        if (deli.containsKey(token)){
+                         if (deli.containsKey(token)){
                             deli.put(token, deli.get(token)+1);
                             if("#".equals(token)){
                                 token = st.nextToken();
@@ -1064,7 +1149,16 @@ System.exit(0);
                                     token = st.nextToken();
                                 }
                                 texto.add(text);
-                                coment.put(token,coment.get(token) +1);
+                                deli.put(token, deli.get(token)+1);
+                                text = "";
+                            }
+                            if("'".equals(token)){
+                                token = st.nextToken();
+                                while (st.hasMoreTokens() && !"'".equals(token)){
+                                    text += token;
+                                    token = st.nextToken();
+                                }
+                                coments.add(text);
                                 text = "";
                             }
                         }else {
@@ -1083,23 +1177,59 @@ System.exit(0);
                 }
             }
             
+            
         }
+       token="";
+       st = new StringTokenizer(this.texto.getText(),"{}();,\"=+-*/><||&&# \n\t",true);
+       while (st.hasMoreTokens()){
+           token = st.nextToken();
+       if ("MATH".equals(token)){
+           token = st.nextToken();
+           while(st.hasMoreTokens()&&!";".equals(token)){
+               text+= token;
+               token = st.nextToken();
+           }
+           math.add(text);
+           text="";
+       }
+       }
+       token="";
+       st = new StringTokenizer(this.texto.getText(),"{}();,\"=+-*/><||&&# \n\t'",true);
+       while (st.hasMoreTokens()){
+           token = st.nextToken();
+           if("'".equals(token)){
+               token = st.nextToken();
+               while(st.hasMoreTokens()&&!"'".equals(token))
+                   token = st.nextToken();
+           }else{
+               text+=token;
+           }
+       }
+       String[] code = text.split("\n");
+       codigo.setText(text);
+      texto.remove(lol);
+        root = new DefaultMutableTreeNode(lol);
+       
        if(root.getChildCount()==0){
+           
         root.add(pr);
         root.add(var);
-       root.add(com); }
+       root.add(com);
+       root.add(mat);
+       root.add(c);}
           Iterator<String> itr = r.keySet().iterator();
         while(itr.hasNext()){
             token = itr.next();
-            if(r.get(token) > 0){
-                pr.add(new  DefaultMutableTreeNode(token));}
+            if(r.get(token) > 0)
+                pr.add(new  DefaultMutableTreeNode(token));
         } 
        
        
-        itr = vari.keySet().iterator();
+        itr = id.keySet().iterator();
         while(itr.hasNext()){
             token = itr.next();
-            if(vari.get(token) > 0) var.add(new  DefaultMutableTreeNode(token));
+            if(id.get(token) > 0) 
+                var.add(new  DefaultMutableTreeNode(token));
         }
        /* itr = deli.keySet().iterator();
         while(itr.hasNext()){
@@ -1113,12 +1243,18 @@ System.exit(0);
         } */
          
          
-        itr = coment.keySet().iterator();
+        itr = texto.iterator();
         while(itr.hasNext()){
-            token = itr.next();
-            if(coment.get(token) > 0){com.add(new DefaultMutableTreeNode(token));}
-            
-        } 
+            com.add(new DefaultMutableTreeNode(itr.next()));
+            } 
+         itr = math.iterator();
+        while(itr.hasNext()){
+            mat.add(new DefaultMutableTreeNode(itr.next()));
+            } 
+        itr = coments.iterator();
+        while(itr.hasNext()){
+            c.add(new DefaultMutableTreeNode(itr.next()));
+            } 
        
        /* itr = num.keySet().iterator();
         while(itr.hasNext()){
@@ -1134,8 +1270,9 @@ System.exit(0);
             
         }
         tabla.setModel(model);*/
+       model.setRoot(root);
        model.reload();
-       JOptionPane.showMessageDialog(null,"listo","Advertencia",JOptionPane.WARNING_MESSAGE);
+       
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jLabel8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseEntered
@@ -1147,7 +1284,8 @@ System.exit(0);
     }//GEN-LAST:event_jLabel8MouseExited
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-       jLabel10.setText("SINTACTICO");
+      panelanalisis.setVisible(true);
+        jLabel10.setText("SINTACTICO");
        jPanel2.removeAll();
        jPanel2.add(sintaxico);
     }//GEN-LAST:event_jLabel8MouseClicked
@@ -1155,6 +1293,525 @@ System.exit(0);
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
 
     }//GEN-LAST:event_formComponentShown
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+
+      java.awt.datatransfer.Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tText = new StringSelection(texto.getText());
+        clip.setContents(tText, null);
+    
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton5AncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jButton5AncestorRemoved
+       
+    }//GEN-LAST:event_jButton5AncestorRemoved
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+     String ret = "";
+        java.awt.datatransfer.Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        Transferable clipTf = sysClip.getContents(null);
+
+        if (clipTf != null) {
+
+            if (clipTf.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                try {
+                    ret = (String) clipTf
+                            .getTransferData(DataFlavor.stringFlavor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        texto.setText(ret);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+         java.awt.datatransfer.Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tText = new StringSelection(texto.getText());
+        clip.setContents(tText, null);
+        texto.setText("");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+      
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        LinkedList <String> ENT = new LinkedList<>();
+        LinkedList <String> DEC = new LinkedList<>();
+        LinkedList <String> TEXT = new LinkedList<>();
+        LinkedList <String> TAKE = new LinkedList<>();
+        
+        String
+                simbolo = "([=<>])",
+                id = "([(a-z)(A-Z)](\\w)*)",
+                num = "((\\d)+)",
+                dec = "((\\d)+(\\.)(\\d)+)",
+                text = "((((#)[.\\W\\w\\s]*(#))|("+id+"))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|("+id+")))*)",
+                send = "((\\s)*IMPRIMIR(\\s)*(\\()(\\s)*((((#)[.\\W\\w\\s]*(#))|("+id+"))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|("+id+")))*)(\\s)*(\\))(\\s)*(;))",
+                take = "((\\s)*ENTRADA(\\b)(\\s)*"+id+"((\\s)*(,(\\s)*"+id+"))*(\\s)*(;))",
+                operaciones = "(("+id+"|"+num+"|"+dec+")(\\s)*[+-/*](\\s)*("+id+"|"+num+"|"+dec+"))",
+                defVal = "((\\s)*"+id+"(\\s)*=(\\s)*("+id+"|"+text+"|"+operaciones+"|"+num+"|"+dec+")(\\s)*(;))",
+                defValVar = "((\\s)*"+id+"(\\s)*=(\\s)*("+id+"|"+text+"|"+operaciones+"|"+num+"|"+dec+")(\\s)*)",
+                condicion = id+"(\\s)*"+simbolo+"(\\s)*("+id+"|"+num+"|"+dec+")((\\s)*([(&&)(||)](\\s)*"+id+"(\\s)*"+simbolo+"(\\s)*("+id+"|"+num+"|"+dec+")))*",
+                var = "((\\s)*((NUM)|(MATH)|(CADENA))(\\b)(\\s)*("+id+"|"+defValVar+")((\\s)*(,(\\s)*("+id+"|"+defValVar+")))*(\\s)*(;))",
+                main = "((\\s)*"+id+"(\\b)(\\s)*INICIO(\\s)*(\\{)[.\\W\\w\\s]*(FIN(\\s)*(\\})(\\s)*)$)",
+                main2 = "((\\s)*"+id+"(\\b)(\\s)*INICIO(\\s)*(\\{))",
+                main3 = "((\\s)*FIN(\\s)*(\\})(\\s)*)",
+                
+               start2 = "((\\s)*PARA(\\b)(\\s)*("+id+"|"+num+")(\\b)(\\s)*(PASO)(\\b)(\\s)*"+num+"(\\s)*[+-]?(\\s)*(\\b)(A)(\\b)(\\s)*("+id+"|"+num+")(\\s)*(\\{))",
+                start3 = "((\\s)*PARAR(\\s)*(\\}))",
+                when2 = "((\\s)*CUANDO(\\s)*(\\()(\\s)*"+condicion+"(\\s)*(\\))(\\s)*(\\{))",
+               when3 = "((\\s)*SCUANDO(\\s)*(\\}))",
+                it2 = "((\\s)*ESO(\\s)*(\\()(\\s)*"+condicion+"(\\s)*(\\))(\\s)*(\\{))",
+                it3 = "((\\s)*COMPLETO(\\s)*(\\}))",
+                 entero = "[0-9]*",
+                decimal = "[0-9]*.[0-9]+";
+        
+                
+                LinkedList <Integer> error = new LinkedList<>();
+                StringTokenizer st = new StringTokenizer(texto.getText(),";{}''",true);
+                String token = "", txt = "", e;
+                int i = 1, mainE = 0, start = 0, when = 0, it = 0, eB = 0;
+                Error.setText("");
+                
+                if(texto.getText().matches(main)) {
+                    while (st.hasMoreTokens()){
+                        token = st.nextToken();
+                        if(st.hasMoreTokens())token = token+st.nextToken();
+                        if(token.matches("[.\\W\\w\\s]*(\\})") && st.countTokens() == 1){
+                            String auxTok = st.nextToken();
+                            token = token+(auxTok.substring(0,auxTok.indexOf("\n")));
+                        }
+                            StringTokenizer lin = new StringTokenizer(token,"\n",true);
+                            while (lin.hasMoreTokens()){
+                                e = lin.nextToken();
+                                if("\n".equals(e)) i++;
+                            }
+                            
+                            if(token.matches(start2)) start++;
+                            if(token.matches(start3)) start--;
+                            if(token.matches(when2)) when++;
+                            if(token.matches(when3)) when--;
+                            if(token.matches(it2)) it++;
+                            if(token.matches(it3)) it--;
+                            if((st.hasMoreTokens() == false && (start > 0 || when > 0 || it > 0)) || (start < 0 || when < 0 || it < 0)) eB = 1;
+                            
+                            if((token.matches(send) || token.matches(take) || token.matches(var) || token.matches(defVal) || token.matches(main2) || token.matches(main3) || token.matches("(\\s)*(\\$)") || token.matches(start2) || token.matches(start3) || token.matches(when2) || token.matches(when3) || token.matches(it2) || token.matches(it3)) && eB == 0){
+                               if(token.matches(var)){
+                                    StringTokenizer stTipo = new StringTokenizer(token," ,;");
+                                    String tipo = stTipo.nextToken();
+                                    
+                                    if(tipo.contains("NUM")){
+                                        while(stTipo.hasMoreTokens()){
+                                            tipo = stTipo.nextToken();
+                                            
+                                            if(ENT.contains(tipo) || DEC.contains(tipo) || TEXT.contains(tipo)|| TAKE.contains(tipo)){
+                                                Error.setText("La Variable esta repetida ("+tipo+") "+i+": \n"
+                                                               + "________________________________________________________________________\n"+token);
+                                                for(int j = 1; j <i; j++){
+                                                    txt += "\n";
+                                                }
+                                                
+                                                break;
+                                            }
+                                            
+                                            ENT.add(tipo);
+                                        }
+                                    }
+                                    if(tipo.contains("DNUM")){
+                                        while(stTipo.hasMoreTokens()){
+                                            tipo = stTipo.nextToken();
+                                            
+                                            if(ENT.contains(tipo) || DEC.contains(tipo) || TEXT.contains(tipo)|| TAKE.contains(tipo)){
+                                                Error.setText("La Variable esta repetida ("+tipo+") "+i+": \n"
+                                                               + "________________________________________________________________________\n"+token);
+                                                for(int j = 1; j <i; j++){
+                                                    txt += "\n";
+                                                }
+                                                
+                                                break;
+                                            }
+                                            
+                                            DEC.add(tipo);
+                                        }
+                                    }
+                                    if(tipo.contains("TAKE")){
+                                        while(stTipo.hasMoreTokens()){
+                                            tipo = stTipo.nextToken();
+                                            
+                                            if(ENT.contains(tipo) || DEC.contains(tipo) || TEXT.contains(tipo)|| TAKE.contains(tipo)){
+                                                Error.setText("La Variable esta repetida ("+tipo+") "+i+": \n"
+                                                               + "________________________________________________________________________\n"+token);
+                                                for(int j = 1; j <i; j++){
+                                                    txt += "\n";
+                                                }
+                                                
+                                                break;
+                                            }
+                                            
+                                            TAKE.add(tipo);
+                                        }
+                                    }
+                                    if(tipo.contains("WORD")){
+                                        while(stTipo.hasMoreTokens()){
+                                            tipo = stTipo.nextToken();
+                                            
+                                            if(ENT.contains(tipo) || DEC.contains(tipo) || TEXT.contains(tipo)|| TAKE.contains(tipo)){
+                                                Error.setText("La variable esta repetida ("+tipo+") "+i+": \n"
+                                                               + "________________________________________________________________________\n"+token);
+                                                for(int j = 1; j <i; j++){
+                                                    txt += "\n";
+                                                }
+                                                
+                                                
+                                                break;
+                                            }
+                                            
+                                            TEXT.add(tipo);
+                                        }
+                                    }
+                                }
+                                if(token.matches(defVal)){
+                                    StringTokenizer stComprobar = new StringTokenizer(token," \n\t=;");
+                                    String ID = stComprobar.nextToken(), comprobar = "", tok = "";
+                                    //System.out.print(ID);
+                                    while(stComprobar.hasMoreTokens()){
+                                            comprobar += stComprobar.nextToken();
+                                        }
+                                    
+                                    if(ENT.contains(ID)){
+                                        StringTokenizer stComprobarE = new StringTokenizer(comprobar,"+*/-");
+                                        while(stComprobarE.hasMoreTokens()){
+                                            tok = stComprobarE.nextToken();
+                                            
+                                            if(tok.matches(id)){
+                                                if(ENT.contains(tok));
+                                                else{
+                                                    Error.setText("Tipos Incompatibles ("+tok+") "+i+": \n"
+                                                                    + "________________________________________________________________________\n"+token);
+                                                    for(int j = 1; j <i; j++){
+                                                        txt += "\n";
+                                                    }
+                                                    
+                                                    break;
+                                                }
+                                            }
+                                            else{
+                                                if(tok.matches(entero));
+                                                else{
+                                                    Error.setText("Tipos Incompatibles ("+tok+") "+i+": \n"
+                                                                    + "________________________________________________________________________\n"+token);
+                                                    for(int j = 1; j <i; j++){
+                                                        txt += "\n";
+                                                    }
+                                                    
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if(DEC.contains(ID)){
+                                            StringTokenizer stComprobarD = new StringTokenizer(comprobar,"+*/-");
+                                            while(stComprobarD.hasMoreTokens()){
+                                                tok = stComprobarD.nextToken();
+
+                                                if(tok.matches(id)){
+                                                    if(DEC.contains(tok));
+                                                    else{
+                                                        Error.setText("Tipos Incompatibles ("+tok+") "+i+": \n"
+                                                                        + "________________________________________________________________________\n"+token);
+                                                        for(int j = 1; j <i; j++){
+                                                            txt += "\n";
+                                                        }
+                                                        
+                                                        break;
+                                                    }
+                                                }
+                                                else{
+                                                    if(tok.matches(decimal));
+                                                    else{
+                                                        Error.setText("Tipos Incompatibles ("+tok+") "+i+": \n"
+                                                                        + "________________________________________________________________________\n"+token);
+                                                        for(int j = 1; j <i; j++){
+                                                            txt += "\n";
+                                                        }
+                                                        
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            if(TEXT.contains(ID)){
+                                                   if(comprobar.matches("((((\")[.\\W\\w\\s]*(\"))|("+id+"))((\\s)*(\\+)((\\s)*((\")[.\\W\\w\\s]*(\"))|("+id+")))*)"));
+                                                   else {
+                                                       Error.setText("Tipos Incompatibles "+i+": \n"
+                                                                        + "________________________________________________________________________\n"+token);
+                                                        for(int j = 1; j <i; j++){
+                                                            txt += "\n";
+                                                        }
+                                                        
+                                                        break;
+                                                   }
+                                            }
+                                            else{
+                                                Error.setText("Variable no declarada "+i+": \n"
+                                                                + "________________________________________________________________________\n"+token);
+                                                for(int j = 1; j <i; j++){
+                                                   txt += "\n";
+                                                }
+                                               
+                                                break;
+                                            } 
+                                        }
+                                    }     
+                                }
+                            }
+                            
+                            
+                            else {
+                                if(token.contains("SEND")){
+                                    Error.setText("Error al declarar sentencia SEND; en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("NUM") || token.contains("DNUM") || token.contains("WORD")){
+                                    Error.setText("Error en declaracion de variables; en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                   
+                                    break;
+                                }
+                                if(token.contains("TAKE")){
+                                    Error.setText("Error en lectura de valor TAKE  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("STOP}")){
+                                    Error.setText("Cierre de Ciclo START incorrecto  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("START")){
+                                    Error.setText("Inicio de Ciclo START incorrecto  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("SWHEN")){
+                                    Error.setText("Cierre de ciclo WHEN incorrecto en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("WHEN")){
+                                    Error.setText("Inicio de ciclo WHEN incorrecto en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("COMPLETE")){
+                                    Error.setText("Cierre de condicion IT incorrecto en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("IT")){
+                                    Error.setText("Inicio de IT incorrecto; en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                else {
+                                    Error.setText("Sintaxis Erronea en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                            }
+                            
+                            
+                    }
+                }
+                   
+                else {
+                    st = new StringTokenizer(texto.getText(),";{}",true);
+                    while (st.hasMoreTokens()){
+                        token = st.nextToken();
+                        if(st.hasMoreTokens())token = token+st.nextToken();
+                        if(token.matches("[.\\W\\w\\s]*(\\})") && st.countTokens() == 1){
+                            String auxTok = st.nextToken();
+                            token = token+(auxTok.substring(0,auxTok.indexOf("\n")));
+                        }
+                            StringTokenizer lin = new StringTokenizer(token,"\n",true);
+                            while (lin.hasMoreTokens()){
+                                e = lin.nextToken();
+                                if("\n".equals(e)) i++;
+                            }
+                            if(eB == 1) break;
+                            if(token.matches(start2)) start++;
+                            if(token.matches(start3)) start--;
+                            if(token.matches(when2)) when++;
+                            if(token.matches(when3)) when--;
+                            if(token.matches(it2)) it++;
+                            if(token.matches(it3)) it--;
+                            if((st.hasMoreTokens() == false && (start > 0 || when > 0 || it > 0)) || (start < 0 || when < 0 || it < 0)) eB = 1;
+                            
+                            if((token.matches(send) || token.matches(take) || token.matches(var) || token.matches(defVal) || token.matches(main2) || token.matches(main3) || token.matches("(\\s)*(\\$)") || token.matches(start2) || token.matches(start3) || token.matches(when2) || token.matches(when3) || token.matches(it2) || token.matches(it3)) && eB == 0){
+                                Error.setText("Compilado Exitosamente");
+                                if(token.matches(main3)) eB = 1;
+                            }
+                             
+                            else {
+                                if(token.contains("SEND")){
+                                    Error.setText("Error al declarar sentencia SEND  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("NUM") || token.contains("DNUM") || token.contains("WORD")){
+                                    Error.setText("Error en declaracion de variables  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("TAKE")){
+                                    Error.setText("Error en lectura de valor TAKE en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("STOP}")){
+                                    Error.setText("Cierre de Ciclo START incorrecto en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("START")){
+                                    Error.setText("Inicio de Ciclo START incorrecto  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("SWHEN")){
+                                    Error.setText("Cierre de ciclo WHEN incorrecto  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("WHEN")){
+                                    Error.setText("Inicio de ciclo WHEN incorrecto  en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("COMPLETE")){
+                                    Error.setText("Cierre de condicion IT incorrecto; en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                if(token.contains("IT")){
+                                    Error.setText("Inicio de IT incorrecto en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                                else {
+                                    Error.setText("Sintaxis Erronea en la linea "+i+": \n"
+                                                   + "\n"+token);
+                                    for(int j = 1; j <i; j++){
+                                        txt += "\n";
+                                    }
+                                    
+                                    break;
+                                }
+                            }
+                    }
+                    if(mainE == 0) {
+                        Error.setText("Cierre de Clase incorrecto en la Linea "+i+": \n"
+                                       + "\n"+token);
+                        for(int j = 1; j <1; j++){
+                            txt += "\n";
+                        }
+                        
+                    }
+                }
+               
+             
+                                            
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton12ActionPerformed
 private void abrirpanel(javax.swing.JPanel panel){
     panel.setSize(110,150);
 }
@@ -1210,14 +1867,17 @@ private void cerrarpanel(javax.swing.JPanel panel){
  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea Error;
     private javax.swing.JPanel Lexico;
     private javax.swing.JPanel Menu;
+    private javax.swing.JTextArea codigo;
     private javax.swing.JPanel errores;
     private javax.swing.JFileChooser file;
     private javax.swing.JComboBox<String> fontcombo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
@@ -1247,10 +1907,10 @@ private void cerrarpanel(javax.swing.JPanel panel){
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTree jTree1;
     private javax.swing.JPanel panel1;
     private javax.swing.JPanel panel2;
